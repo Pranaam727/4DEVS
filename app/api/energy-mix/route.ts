@@ -1,47 +1,101 @@
 /**
  * GET /api/energy-mix
- *
- * PLACEHOLDER STUB — owned by Member 2 (Backend Engineer)
- *
- * This file establishes the route and response contract.
- * Member 2 must implement the actual data ingestion from CEA/MNRE sources.
- *
- * IMPORTANT: Do NOT return fake/fabricated data here. If the backend is not yet integrated,
- * return an `unavailable` status so the frontend can display an honest state.
- *
- * Response Contract: See lib/types/energy-mix.ts → EnergyMixResponse
- *
- * HTTP Codes:
- *   200 — Successful data retrieval (status: "success" | "unavailable")
- *   500 — Unexpected server error (status: "error")
+ * 
+ * Central Electricity Authority (CEA) verified data integration.
+ * Provides:
+ * - Installed capacity (MW & GW) for renewables, large hydro, thermal (coal, gas, lignite, diesel), and nuclear
+ * - Actual electricity generation (MU & BU / TWh)
+ * - Energy mix percentages
+ * - Coal vs. Renewable comparative metrics
+ * - Historical capacity additions (FY 2021-22 through FY 2024-25)
+ * - Regional capacity breakdown
+ * 
+ * Strict separation of capacity (MW/GW) and generation (MU/BU).
  */
-import { NextResponse } from 'next/server';
-import type { EnergyMixResponse } from '@/lib/types/energy-mix';
 
-export async function GET(): Promise<NextResponse<EnergyMixResponse>> {
-  const retrievedAt = new Date().toISOString();
+import { NextRequest } from 'next/server';
+import { getEnergyMixData } from '@/lib/sources/cea-energy';
+import { createSuccessResponse, createUnavailableResponse } from '@/lib/server/response';
+import { rateLimiter } from '@/lib/server/rate-limit';
+import { globalCache } from '@/lib/server/cache';
+import { EnergyMixData } from '@/lib/types/energy-mix';
 
-  // -------------------------------------------------------------------------
-  // TODO (Member 2): Replace this stub with real data fetching from:
-  //   - CEA Monthly Reports (cea.nic.in)
-  //   - MNRE press releases
-  //   - Grid-India / POSOCO daily reports
-  //
-  // The response MUST follow EnergyMixResponse type from lib/types/energy-mix.ts
-  // The response MUST set asOf to the official publication date.
-  // The response MUST NOT contain fabricated or placeholder numbers.
-  // -------------------------------------------------------------------------
 
-  const unavailableResponse: EnergyMixResponse = {
-    status: 'unavailable',
-    asOf: null,
-    retrievedAt,
-    source: null,
-    sourceUrl: null,
-    message:
-      'Energy mix data ingestion pipeline is not yet connected to official CEA/MNRE sources. This will be implemented by Member 2 (Backend Engineer). No synthetic data will be substituted.',
-    data: null,
-  };
+export async function GET(request: NextRequest) {
+  // Rate limit by IP or fallback
+  const ip = request.headers.get('x-forwarded-for') || 'local-client';
+  const { allowed, remaining, resetInMs } = rateLimiter.check(ip);
+  if (!allowed) {
+    return createUnavailableResponse(
+      `Rate limit exceeded. Try again in ${Math.ceil(resetInMs / 1000)}s.`,
+      new Date().toISOString(),
+      429,
+      { 'Retry-After': String(Math.ceil(resetInMs / 1000)) }
+    );
+  }
 
-  return NextResponse.json(unavailableResponse, { status: 200 });
+  const cacheKey = 'api:energy-mix';
+  const cached = globalCache.get<EnergyMixData>(cacheKey);
+
+  if (cached.state === 'fresh' && cached.entry) {
+    return createSuccessResponse(cached.entry.data, {
+      asOf: cached.entry.asOf,
+      retrievedAt: cached.entry.retrievedAt,
+      source: cached.entry.source,
+      sourceUrl: cached.entry.sourceUrl,
+    }, {
+      'X-Data-Freshness': 'fresh',
+      'X-Data-Age': String(cached.ageSeconds),
+      'X-RateLimit-Remaining': String(remaining),
+    });
+  }
+
+  try {
+    const result = await getEnergyMixData();
+
+    globalCache.set(
+      cacheKey,
+      result.data,
+      {
+        asOf: result.asOf,
+        retrievedAt: result.retrievedAt,
+        source: result.source,
+        sourceUrl: result.sourceUrl,
+      },
+      3600 // 1 hour TTL
+    );
+
+    return createSuccessResponse(result.data, {
+      asOf: result.asOf,
+      retrievedAt: result.retrievedAt,
+      source: result.source,
+      sourceUrl: result.sourceUrl,
+    }, {
+      'X-Data-Freshness': 'fresh',
+      'X-Data-Age': '0',
+      'X-RateLimit-Remaining': String(remaining),
+    });
+  } catch (err: any) {
+    console.error('[GET /api/energy-mix] Failed to retrieve energy mix:', err);
+
+    // Stale fallback policy
+    if (cached.state === 'stale' && cached.entry) {
+      return createSuccessResponse(cached.entry.data, {
+        asOf: cached.entry.asOf,
+        retrievedAt: cached.entry.retrievedAt,
+        source: cached.entry.source,
+        sourceUrl: cached.entry.sourceUrl,
+      }, {
+        'X-Data-Freshness': 'stale',
+        'X-Data-Age': String(cached.ageSeconds),
+        'X-RateLimit-Remaining': String(remaining),
+      });
+    }
+
+    return createUnavailableResponse(
+      'CEA energy mix telemetry is temporarily unavailable. Upstream data portal could not be reached.',
+      new Date().toISOString(),
+      503
+    );
+  }
 }

@@ -1,16 +1,46 @@
 /**
- * Shared API Response Types for India Green Grid
- * Coordinated between Member 1 (Frontend), Member 2 (Backend), and Member 3 (Decision Tools)
+ * INDIA GREEN GRID — SHARED API RESPONSE CONTRACT
+ * Agreed contract between Member 1 (Frontend), Member 2 (Backend), and Member 3 (Decision Tools).
  */
 
 export type ApiResponseStatus = 'success' | 'unavailable' | 'error';
 
 export interface BaseApiResponse<T> {
   status: ApiResponseStatus;
-  asOf: string | null;            // Official publication date / reporting period (e.g. "2024-10-31" or "October 2024")
-  retrievedAt: string | null;     // ISO timestamp when backend retrieved or parsed the data
-  source: string | null;          // Official source name (e.g. "Central Electricity Authority (CEA)")
-  sourceUrl: string | null;       // Official publication URL or portal reference
-  message?: string;               // Explanation for unavailable or error status
+  asOf: string | null;
+  retrievedAt: string | null;
+  source: string | null;
+  sourceUrl: string | null;
+  message?: string;
   data: T | null;
+}
+
+export interface ApiSuccessResponse<T> {
+  status: 'success';
+  asOf: string;
+  retrievedAt: string;
+  source: string;
+  sourceUrl: string;
+  data: T;
+}
+
+export interface ApiUnavailableResponse {
+  status: 'unavailable';
+  asOf: null;
+  retrievedAt: string | null;
+  source: null;
+  sourceUrl: null;
+  message: string;
+  data: null;
+}
+
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiUnavailableResponse | BaseApiResponse<T>;
+
+export interface SourceProvenance {
+  sourceName: string;
+  sourceUrl: string;
+  publicationDate: string;
+  retrievalTimestamp: string;
+  verificationStatus: 'verified' | 'provisional' | 'regulatory_order';
+  notes?: string;
 }
