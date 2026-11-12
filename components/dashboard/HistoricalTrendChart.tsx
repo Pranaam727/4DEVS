@@ -65,7 +65,8 @@ function SVGLineChart({
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
-      className="w-full text-[10px]"
+      className="w-full max-w-full h-auto text-[10px]"
+      style={{ maxHeight: `${height}px` }}
       aria-label="Historical trend chart"
     >
       {/* Grid lines */}

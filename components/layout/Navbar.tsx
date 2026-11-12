@@ -37,9 +37,11 @@ export const Navbar: React.FC = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo / Brand */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-lg bg-linear-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 max-w-[36px] max-h-[36px] rounded-lg bg-linear-to-br from-emerald-600 to-teal-800 flex items-center justify-center text-white shadow-xs shrink-0 object-contain group-hover:scale-105 transition-transform">
               <svg
-                className="w-5 h-5"
+                className="w-5 h-5 max-w-[20px] max-h-[20px] object-contain"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"

@@ -13,7 +13,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
 }) => {
   return (
     <div className={`flex flex-col items-center justify-center text-center px-4 ${className}`}>
-      <div className="relative w-12 h-12 mb-4">
+      <div className="relative w-12 h-12 max-w-[48px] max-h-[48px] shrink-0 mb-4">
         <div className="absolute inset-0 rounded-full border-4 border-emerald-500/20" />
         <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
       </div>

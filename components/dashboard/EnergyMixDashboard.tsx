@@ -65,6 +65,21 @@ export function EnergyMixDashboard() {
         <PageHeader
           title="Energy Mix Dashboard"
           category="National Energy Intelligence"
+          logo={
+            <svg
+              className="w-10 h-10 sm:w-12 sm:h-12 max-w-[200px] object-contain text-rose-500"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          }
         />
         <ErrorState
           title="Failed to Retrieve Energy Data"
@@ -86,6 +101,21 @@ export function EnergyMixDashboard() {
           title="Energy Mix Dashboard"
           category="National Energy Intelligence"
           subtitle="All-India installed capacity, electricity generation, coal vs renewable comparison, and historical trends."
+          logo={
+            <svg
+              className="w-10 h-10 sm:w-12 sm:h-12 max-w-[200px] object-contain text-amber-500"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+          }
           badge={<StatusBadge label="Data Pending" variant="warning" />}
         />
 
@@ -124,6 +154,21 @@ export function EnergyMixDashboard() {
         title="Energy Mix Dashboard"
         category="National Energy Intelligence"
         subtitle={`All-India installed capacity, electricity generation, coal vs renewable comparison. As of: ${response.asOf || 'Period unspecified by authority'}.`}
+        logo={
+          <svg
+            className="w-10 h-10 sm:w-12 sm:h-12 max-w-[200px] object-contain text-emerald-600 dark:text-emerald-400"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        }
         badge={
           <StatusBadge
             label={data.dataFreshnessStatus === 'live' ? 'Live Telemetry' : 'Official Report'}
@@ -159,7 +204,7 @@ export function EnergyMixDashboard() {
                 subtitle="All-India (All Sources)"
                 accentColor="slate"
                 icon={
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4 max-w-[16px] max-h-[16px] object-contain" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 }
@@ -171,7 +216,7 @@ export function EnergyMixDashboard() {
                 subtitle={`${installedCapacity.renewableSharePercent.toFixed(1)}% of total`}
                 accentColor="emerald"
                 icon={
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4 max-w-[16px] max-h-[16px] object-contain" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 }
@@ -184,7 +229,7 @@ export function EnergyMixDashboard() {
                 subtitle={`${installedCapacity.conventionalSharePercent.toFixed(1)}% of total`}
                 accentColor="amber"
                 icon={
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4 max-w-[16px] max-h-[16px] object-contain" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                   </svg>
                 }
@@ -196,7 +241,7 @@ export function EnergyMixDashboard() {
                 accentColor="emerald"
                 footnote="Renewable includes Solar, Wind, Hydro, Bio"
                 icon={
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <svg className="w-4 h-4 max-w-[16px] max-h-[16px] object-contain" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 }

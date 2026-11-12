@@ -21,10 +21,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     <div
       className={`rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 p-8 text-center flex flex-col items-center justify-center bg-slate-50/50 dark:bg-slate-900/30 ${className}`}
     >
-      <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center mb-3">
+      <div className="w-12 h-12 max-w-[48px] max-h-[48px] rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 flex items-center justify-center shrink-0 object-contain mb-3">
         {icon || (
           <svg
-            className="w-6 h-6"
+            className="w-6 h-6 max-w-[24px] max-h-[24px] object-contain"
+            width="24"
+            height="24"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

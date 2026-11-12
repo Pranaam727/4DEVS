@@ -19,9 +19,11 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
     <div
       className={`rounded-2xl border border-rose-200 dark:border-rose-950/60 bg-rose-50/50 dark:bg-rose-950/20 p-8 text-center flex flex-col items-center justify-center ${className}`}
     >
-      <div className="w-12 h-12 rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-4">
+      <div className="w-12 h-12 max-w-[48px] max-h-[48px] rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 object-contain mb-4">
         <svg
-          className="w-6 h-6"
+          className="w-6 h-6 max-w-[24px] max-h-[24px] object-contain"
+          width="24"
+          height="24"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

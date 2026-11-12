@@ -86,7 +86,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           {title}
         </p>
         {icon && (
-          <div className={`p-2 rounded-lg shrink-0 ${styles.iconBg}`}>
+          <div className={`p-2 rounded-lg shrink-0 w-9 h-9 max-w-[36px] max-h-[36px] flex items-center justify-center object-contain overflow-hidden ${styles.iconBg}`}>
             {icon}
           </div>
         )}
